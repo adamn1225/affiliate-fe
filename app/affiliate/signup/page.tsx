@@ -13,7 +13,7 @@ export default function AffiliateSignup() {
     })
     const [submitted, setSubmitted] = useState(false)
 
-    const handleChange = (field: string, value: string) => {
+    const handleChange = (field: keyof typeof form, value: string) => {
         setForm(prev => ({ ...prev, [field]: value }))
     }
 
@@ -33,7 +33,7 @@ export default function AffiliateSignup() {
         return (
             <div className="p-6 text-center">
                 <h2 className="text-xl font-bold">Thanks for signing up!</h2>
-                <p>We’ll get in touch shortly.</p>
+                <p>We&apos;ll get in touch shortly.</p>
             </div>
         )
     }
@@ -48,8 +48,8 @@ export default function AffiliateSignup() {
                     required
                     className="w-full border p-2 rounded"
                     placeholder={field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                    value={(form as any)[field]}
-                    onChange={(e) => handleChange(field, e.target.value)}
+                    value={form[field as keyof typeof form]} // Use proper typing
+                    onChange={(e) => handleChange(field as keyof typeof form, e.target.value)}
                 />
             ))}
 

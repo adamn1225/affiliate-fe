@@ -25,7 +25,7 @@ export default function AffiliateDashboard() {
     useEffect(() => {
         if (!affiliateId) return
 
-        fetch(`http://localhost:8080/api/affiliates/${affiliateId}/leads`)
+        fetch(`https://affiliate-tracking.onrender.com/api/leads`)
             .then(res => res.json())
             .then(data => {
                 setLeads(data)

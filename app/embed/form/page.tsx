@@ -32,7 +32,7 @@ export default function EmbedForm() {
         setLoading(true)
 
         try {
-            const res = await fetch('http://localhost:8080/api/leads', {
+            const res = await fetch('https://affiliate-tracking.onrender.com/api/leads', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...form, affiliate_id: affiliateId }),

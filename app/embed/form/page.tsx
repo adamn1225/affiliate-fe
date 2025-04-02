@@ -1,10 +1,11 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-export default function EmbedForm() {
+function EmbedForm() {
     const searchParams = useSearchParams()
     const affiliateId = searchParams.get('affiliate_id') || 'unknown'
 
@@ -156,5 +157,13 @@ export default function EmbedForm() {
                 )}
             </AnimatePresence>
         </>
+    )
+}
+
+export default function EmbedFormWrapper() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <EmbedForm />
+        </Suspense>
     )
 }

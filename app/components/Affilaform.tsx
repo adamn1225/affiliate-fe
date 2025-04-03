@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import EmbedPreview from './EmbedPreview'
 
 export default function Affilaform() {
     const [form, setForm] = useState({
@@ -11,10 +12,13 @@ export default function Affilaform() {
         phone: '',
         website: '',
         commission_rate: 0.1,
+        button_color: '#000000',
+        form_title: '',
     })
     const [submitted, setSubmitted] = useState(false)
     const [iframeCode, setIframeCode] = useState<string | null>(null) // State to store iframe code
     const [modalOpen, setModalOpen] = useState(false) // State to control modal visibility
+    const [previewEnabled, setPreviewEnabled] = useState(true)
 
     const handleChange = (field: keyof typeof form, value: string) => {
         setForm(prev => ({ ...prev, [field]: value }))
@@ -34,7 +38,9 @@ export default function Affilaform() {
             const affiliateId = data.affiliate.id
 
             // Update iframe with actual deployed embed URL
-            const iframeHTML = `<iframe src="https://nextload.vercel.app/embed/form?affiliate=${affiliateId}" width="100%" height="800" style="border:none;" title="Load Request Form"></iframe>`
+            const iframeHTML = `<iframe src="https://nextload.vercel.app/embed/form?affiliate=${affiliateId}&button_color=${encodeURIComponent(form.button_color)}&form_title=${encodeURIComponent(form.form_title || 'Request a Transport Quote')}" ...`
+
+
 
             setSubmitted(true)
             setIframeCode(iframeHTML)
@@ -46,26 +52,66 @@ export default function Affilaform() {
 
     return (
         <>
-            <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-4 bg-white rounded shadow">
-                <h2 className="text-xl font-bold mb-4 text-center">Affiliate Signup</h2>
+            <div className='flex gap-2 justify-center w-full'>
+                <form onSubmit={handleSubmit} className="max-w-2xl p-6 space-y-4 bg-white rounded shadow">
+                    <h2 className="text-xl font-bold mb-4 text-center">Affiliate Signup</h2>
 
-                {['company_name', 'contact_name', 'email', 'phone', 'website'].map((field) => (
+                    {['company_name', 'contact_name', 'email', 'phone', 'website'].map((field) => (
+                        <input
+                            key={field}
+                            required
+                            className="w-full border p-2 rounded"
+                            placeholder={field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            value={form[field as keyof typeof form]} // Use proper typing
+                            onChange={(e) => handleChange(field as keyof typeof form, e.target.value)}
+                        />
+                    ))}
+
                     <input
-                        key={field}
-                        required
+                        type="text"
                         className="w-full border p-2 rounded"
-                        placeholder={field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                        value={form[field as keyof typeof form]} // Use proper typing
-                        onChange={(e) => handleChange(field as keyof typeof form, e.target.value)}
+                        placeholder="Custom Form Header (optional)"
+                        value={form.form_title}
+                        onChange={(e) => handleChange('form_title', e.target.value)}
                     />
-                ))}
 
-                <div className='flex items-center justify-center w-full'>
-                    <button type="submit" className="w-full bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
-                        Generate Form
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <label className="text-sm font-medium">Button Color:</label>
+                        <input
+                            type="color"
+                            value={form.button_color}
+                            onChange={(e) => handleChange('button_color', e.target.value)}
+                            className="w-10 h-10 p-0 border rounded"
+                        />
+                    </div>
+
+                    <div className="flex justify-center space-x-4">
+                        <button
+                            type="button"
+                            onClick={() => setPreviewEnabled(true)}
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        >
+                            Preview Form
+                        </button>
+
+                        <button
+                            type="submit"
+                            className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+                        >
+                            Generate Embed Code
+                        </button>
+                    </div>
+                </form>
+                <div className='flex justify-center items-center w-full max-w-2xl'>
+                    {previewEnabled && (
+                        <EmbedPreview
+                            affiliateId="preview-mode"
+                            buttonColor={form.button_color}
+                            formTitle={form.form_title}
+                        />
+                    )}
                 </div>
-            </form>
+            </div>
 
             {/* Modal */}
             <AnimatePresence>

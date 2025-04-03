@@ -5,7 +5,7 @@ import Affilaform from '@/components/Affilaform'
 export default function SignupPage() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="max-w-md w-full p-6 bg-white rounded shadow">
+      <div className=" w-full p-6 bg-white rounded shadow">
         <h1 className="text-2xl text-center font-bold mb-4">HEAVY HAULERS</h1>
         <Affilaform />
       </div>

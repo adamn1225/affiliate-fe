@@ -31,8 +31,17 @@ export default function AffiliateDashboardContent() {
                     : process.env.NEXT_PUBLIC_API_URL;
 
             const [affiliatesRes, leadsRes] = await Promise.all([
-                fetch(`${baseUrl}/api/affiliates`),
-                fetch(`${baseUrl}/api/leads`),
+                fetch(`${baseUrl}/api/affiliates`, {
+                    headers: {
+                        Authorization: `Bearer ${process.env.NEXT_PUBLIC_ADMIN_TOKEN}`
+                    }
+                }),
+                fetch(`${baseUrl}/api/leads`, {
+                    headers: {
+                        Authorization: `Bearer ${process.env.NEXT_PUBLIC_ADMIN_TOKEN}`
+                    }
+                }),
+
             ]);
 
             const [affiliatesData, leadsData] = await Promise.all([

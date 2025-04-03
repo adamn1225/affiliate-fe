@@ -1,12 +1,25 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function EmbedForm() {
     const searchParams = useSearchParams()
-    const affiliateId = searchParams.get('affiliate_id') || 'unknown'
+    useEffect(() => {
+        setForm((prev) => ({
+            ...prev,
+            utm_source: searchParams.get('utm_source') || '',
+            utm_medium: searchParams.get('utm_medium') || '',
+            utm_campaign: searchParams.get('utm_campaign') || '',
+        }))
+    }, [searchParams])
+    const affiliateId = searchParams.get('affiliate') || 'unknown'
+    const buttonColor = searchParams.get('button_color') || '#000000'
+    const formTitle = searchParams.get('form_title') || 'Request a Transport Quote'
+    const utm_source = searchParams.get('utm_source') || ''
+    const utm_medium = searchParams.get('utm_medium') || ''
+    const utm_campaign = searchParams.get('utm_campaign') || ''
 
     const [form, setForm] = useState({
         name: '',
@@ -15,6 +28,9 @@ export default function EmbedForm() {
         year: '',
         manufacturer: '',
         model: '',
+        utm_source: '',
+        utm_medium: '',
+        utm_campaign: ''
     })
 
     const [open, setOpen] = useState(false)
@@ -23,7 +39,7 @@ export default function EmbedForm() {
     const [loading, setLoading] = useState(false)
 
     const handleChange = (field: string, value: string) => {
-        setForm((prev) => ({ ...prev, [field]: value }))
+        setForm((prev) => ({ ...prev, [field]: value, }))
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -35,7 +51,9 @@ export default function EmbedForm() {
             const res = await fetch('https://affiliate-tracking.onrender.com/api/leads', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...form, affiliate_id: affiliateId }),
+                body: JSON.stringify({
+                    ...form, affiliate_id: affiliateId,
+                }),
             })
 
             if (res.ok) {
@@ -54,10 +72,11 @@ export default function EmbedForm() {
     return (
         <>
             <button
+                style={{ backgroundColor: buttonColor }}
                 onClick={() => setOpen(true)}
                 className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
             >
-                Request a Transport Quote
+                {formTitle}
             </button>
 
             <AnimatePresence>
@@ -86,6 +105,9 @@ export default function EmbedForm() {
                                         year: '',
                                         manufacturer: '',
                                         model: '',
+                                        utm_source: '',
+                                        utm_medium: '',
+                                        utm_campaign: ''
                                     })
                                 }}
                                 className="absolute top-2 right-2 text-gray-600 hover:text-black text-xl"
@@ -105,12 +127,12 @@ export default function EmbedForm() {
                                         Your transport quote request has been submitted.
                                     </p>
                                     <p className="text-sm text-gray-500">
-                                        Our team will contact you shortly with a personalized quote.
+                                        Someone will contact you shortly with a personalized quote.
                                     </p>
                                 </motion.div>
                             ) : (
                                 <form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-center">
-                                    <h2 className="text-xl font-bold">Request a Transport Quote</h2>
+                                    <h2 className="text-xl text-center font-bold">{formTitle}</h2>
 
                                     {error && (
                                         <motion.div
@@ -138,8 +160,8 @@ export default function EmbedForm() {
 
                                     <button
                                         type="submit"
-                                        disabled={loading}
-                                        className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 flex items-center justify-center gap-2"
+                                        style={{ backgroundColor: buttonColor }}
+                                        className="text-white px-4 py-2 rounded hover:opacity-90"
                                     >
                                         {loading ? (
                                             <motion.div

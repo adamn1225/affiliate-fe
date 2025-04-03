@@ -8,7 +8,7 @@ type Props = {
 }
 
 export default function EmbedPreview({ affiliateId, buttonColor, formTitle }: Props) {
-    const previewUrl = `http://localhost:3000/embed/form?affiliate=${affiliateId}&button_color=${encodeURIComponent(buttonColor)}&form_title=${encodeURIComponent(formTitle || 'Request a Transport Quote')}`
+    const previewUrl = `https://affilaform.com/embed/form?affiliate=${affiliateId}&button_color=${encodeURIComponent(buttonColor)}&form_title=${encodeURIComponent(formTitle || 'Request a Transport Quote')}`
 
 
 

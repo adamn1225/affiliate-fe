@@ -7,19 +7,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 export default function EmbedForm() {
     const searchParams = useSearchParams()
     useEffect(() => {
-        setForm((prev) => ({
-            ...prev,
-            utm_source: searchParams.get('utm_source') || '',
-            utm_medium: searchParams.get('utm_medium') || '',
-            utm_campaign: searchParams.get('utm_campaign') || '',
-        }))
+        setForm((prev) => ({ ...prev, }))
     }, [searchParams])
     const affiliateId = searchParams.get('affiliate') || 'unknown'
     const buttonColor = searchParams.get('button_color') || '#000000'
     const formTitle = searchParams.get('form_title') || 'Request a Transport Quote'
-    const utm_source = searchParams.get('utm_source') || ''
-    const utm_medium = searchParams.get('utm_medium') || ''
-    const utm_campaign = searchParams.get('utm_campaign') || ''
 
     const [form, setForm] = useState({
         name: '',
@@ -27,7 +19,9 @@ export default function EmbedForm() {
         phone: '',
         year: '',
         manufacturer: '',
-        model: ''
+        model: '',
+        origin: '',
+        destination: ''
     })
 
     const [open, setOpen] = useState(false)
@@ -102,6 +96,8 @@ export default function EmbedForm() {
                                         year: '',
                                         manufacturer: '',
                                         model: '',
+                                        origin: '',
+                                        destination: ''
                                     })
                                 }}
                                 className="absolute top-2 right-2 text-gray-600 hover:text-black text-xl"
@@ -150,6 +146,24 @@ export default function EmbedForm() {
                                                 onChange={(e) => handleChange(field, e.target.value)}
                                             />
                                         ))}
+                                        <div className='grid grid-cols-2 gap-4'>
+                                            <input
+                                                type="text"
+                                                required
+                                                placeholder="Origin - City/State or Zip"
+                                                className="w-full border p-2 rounded"
+                                                value={form.origin}
+                                                onChange={(e) => handleChange('origin', e.target.value)}
+                                            />
+                                            <input
+                                                type="text"
+                                                required
+                                                placeholder="Destionation - City/State or Zip"
+                                                className="w-full border p-2 rounded"
+                                                value={form.destination}
+                                                onChange={(e) => handleChange('destination', e.target.value)}
+                                            />
+                                        </div>
                                     </div>
 
                                     <button

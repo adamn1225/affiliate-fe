@@ -34,19 +34,29 @@ export default function Affilaform() {
         })
 
         if (res.ok) {
-            const data = await res.json()
-            const affiliateId = data.affiliate.id
+            const text = await res.text()
+            let data
+            try {
+                data = JSON.parse(text)
+            } catch (err) {
+                console.error("Invalid JSON:", text)
+                alert("Server error: invalid response format")
+                return
+            }
 
-            // Update iframe with actual deployed embed URL
+            const affiliateId = data?.affiliate?.id
+            if (!affiliateId) {
+                alert("No affiliate ID returned")
+                return
+            }
             const iframeHTML = `<iframe src="https://affilaform.com/embed/form?affiliate=${affiliateId}&button_color=${encodeURIComponent(form.button_color)}&form_title=${encodeURIComponent(form.form_title || 'Request a Transport Quote')}" ...`
-
-
-
             setSubmitted(true)
             setIframeCode(iframeHTML)
-            setModalOpen(true) // Open the modal
+            setModalOpen(true)
         } else {
-            alert('Something went wrong. Try again.')
+            const text = await res.text()
+            console.error("Failed request:", text)
+            alert("Something went wrong. Try again.")
         }
     }
 
@@ -102,7 +112,7 @@ export default function Affilaform() {
                         </button>
                     </div>
                 </form>
-                <div className='flex justify-center items-center w-full max-w-2xl'>
+                <div className='flex justify-center items-center w-full max-w-4xl'>
                     {previewEnabled && (
                         <EmbedPreview
                             affiliateId="preview-mode"

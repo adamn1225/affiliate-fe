@@ -1,14 +1,11 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function EmbedForm() {
     const searchParams = useSearchParams()
-    useEffect(() => {
-        setForm((prev) => ({ ...prev, }))
-    }, [searchParams])
     const affiliateId = searchParams.get('affiliate') || 'unknown'
     const buttonColor = searchParams.get('button_color') || '#000000'
     const formTitle = searchParams.get('form_title') || 'Request a Transport Quote'
@@ -21,16 +18,17 @@ export default function EmbedForm() {
         manufacturer: '',
         model: '',
         origin: '',
-        destination: ''
+        destination: '',
     })
 
+    const [step, setStep] = useState(1) // Track the current step
     const [open, setOpen] = useState(false)
     const [submitted, setSubmitted] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
 
     const handleChange = (field: string, value: string) => {
-        setForm((prev) => ({ ...prev, [field]: value, }))
+        setForm((prev) => ({ ...prev, [field]: value }))
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -43,7 +41,8 @@ export default function EmbedForm() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    ...form, affiliate_id: affiliateId,
+                    ...form,
+                    affiliate_id: affiliateId,
                 }),
             })
 
@@ -59,6 +58,9 @@ export default function EmbedForm() {
             setLoading(false)
         }
     }
+
+    const nextStep = () => setStep((prev) => prev + 1)
+    const prevStep = () => setStep((prev) => prev - 1)
 
     return (
         <>
@@ -97,8 +99,9 @@ export default function EmbedForm() {
                                         manufacturer: '',
                                         model: '',
                                         origin: '',
-                                        destination: ''
+                                        destination: '',
                                     })
+                                    setStep(1) // Reset to the first step
                                 }}
                                 className="absolute top-2 right-2 text-gray-600 hover:text-black text-xl"
                             >
@@ -121,7 +124,7 @@ export default function EmbedForm() {
                                     </p>
                                 </motion.div>
                             ) : (
-                                <form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-center">
+                                <form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-center w-full">
                                     <h2 className="text-xl text-center font-bold">{formTitle}</h2>
 
                                     {error && (
@@ -134,51 +137,116 @@ export default function EmbedForm() {
                                         </motion.div>
                                     )}
 
-                                    <div className="grid grid-cols-2 gap-4">
-                                        {['year', 'manufacturer', 'model', 'name', 'email', 'phone'].map((field) => (
+                                    {step === 1 && (
+                                        <div className="flex flex-col gap-4 w-full">
+                                            <div className="grid grid-cols-3 gap-3">
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    placeholder="Year"
+                                                    className="w-full border p-2 rounded"
+                                                    value={form.year}
+                                                    onChange={(e) => handleChange('year', e.target.value)}
+                                                />
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    placeholder="Manufacturer"
+                                                    className="w-full border p-2 rounded"
+                                                    value={form.manufacturer}
+                                                    onChange={(e) => handleChange('manufacturer', e.target.value)}
+                                                />
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    placeholder="Model"
+                                                    className="w-full border p-2 rounded"
+                                                    value={form.model}
+                                                    onChange={(e) => handleChange('model', e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col gap-3 w-full">
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    placeholder="Origin - City/State or Zip"
+                                                    className="w-full border p-2 rounded"
+                                                    value={form.origin}
+                                                    onChange={(e) => handleChange('origin', e.target.value)}
+                                                />
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    placeholder="Destination - City/State or Zip"
+                                                    className="w-full border p-2 rounded"
+                                                    value={form.destination}
+                                                    onChange={(e) => handleChange('destination', e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {step === 2 && (
+                                        <div className="grid grid-cols-3 gap-4">
                                             <input
-                                                key={field}
                                                 type="text"
-                                                required
-                                                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                                                placeholder="Name"
                                                 className="w-full border p-2 rounded"
-                                                value={form[field as keyof typeof form]} // Use proper typing
-                                                onChange={(e) => handleChange(field, e.target.value)}
+                                                value={form.name}
+                                                onChange={(e) => handleChange('name', e.target.value)}
                                             />
-                                        ))}
-                                        <div className='grid grid-cols-2 gap-4'>
                                             <input
-                                                type="text"
-                                                required
-                                                placeholder="Origin - City/State or Zip"
+                                                type="email"
+                                                placeholder="Email"
                                                 className="w-full border p-2 rounded"
-                                                value={form.origin}
-                                                onChange={(e) => handleChange('origin', e.target.value)}
+                                                value={form.email}
+                                                onChange={(e) => handleChange('email', e.target.value)}
                                             />
                                             <input
                                                 type="text"
-                                                required
-                                                placeholder="Destionation - City/State or Zip"
+                                                placeholder="Phone"
                                                 className="w-full border p-2 rounded"
-                                                value={form.destination}
-                                                onChange={(e) => handleChange('destination', e.target.value)}
+                                                value={form.phone}
+                                                onChange={(e) => handleChange('phone', e.target.value)}
                                             />
                                         </div>
-                                    </div>
+                                    )}
 
-                                    <button
-                                        type="submit"
-                                        style={{ backgroundColor: buttonColor }}
-                                        className="text-white px-4 py-2 rounded hover:opacity-90"
-                                    >
-                                        {loading ? (
-                                            <motion.div
-                                                className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
-                                            />
-                                        ) : (
-                                            'Submit Request'
+                                    <div className="flex justify-center gap-8 w-full">
+                                        {step > 1 && (
+                                            <button
+                                                type="button"
+                                                onClick={prevStep}
+                                                className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
+                                            >
+                                                Previous
+                                            </button>
                                         )}
-                                    </button>
+                                        {step < 2 ? (
+                                            <button
+                                                style={{ backgroundColor: buttonColor }}
+                                                type="button"
+                                                onClick={nextStep}
+                                                className="bg-black w-full text-white px-4 py-2 rounded hover:bg-gray-800"
+                                            >
+                                                Next
+                                            </button>
+                                        ) : (
+                                            <button
+                                                type="submit"
+                                                style={{ backgroundColor: buttonColor }}
+                                                className="text-white px-4 py-2 rounded hover:opacity-90"
+                                            >
+                                                {loading ? (
+                                                    <motion.div
+                                                        className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                                                    />
+                                                ) : (
+                                                    'Submit Request'
+                                                )}
+                                            </button>
+                                        )}
+                                    </div>
                                 </form>
                             )}
                         </motion.div>

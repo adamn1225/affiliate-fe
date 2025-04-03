@@ -1,61 +1,14 @@
 'use client'
+import Affilaform from '@/components/Affilaform'
 
-import { useState } from 'react'
 
-export default function AffiliateSignup() {
-    const [form, setForm] = useState({
-        company_name: '',
-        contact_name: '',
-        email: '',
-        phone: '',
-        website: '',
-        commission_rate: 0.1,
-    })
-    const [submitted, setSubmitted] = useState(false)
-
-    const handleChange = (field: keyof typeof form, value: string) => {
-        setForm(prev => ({ ...prev, [field]: value }))
-    }
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-
-        const res = await fetch('https://affiliate-tracking.onrender.com/api/affiliates', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(form),
-        })
-
-        if (res.ok) setSubmitted(true)
-    }
-
-    if (submitted) {
-        return (
-            <div className="p-6 text-center">
-                <h2 className="text-xl font-bold">Thanks for signing up!</h2>
-                <p>We&apos;ll get in touch shortly.</p>
-            </div>
-        )
-    }
-
+export default function SignupPage() {
     return (
-        <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-6 space-y-4 bg-white rounded shadow">
-            <h2 className="text-xl font-bold mb-4">Affiliate Signup</h2>
-
-            {['company_name', 'contact_name', 'email', 'phone', 'website'].map((field) => (
-                <input
-                    key={field}
-                    required
-                    className="w-full border p-2 rounded"
-                    placeholder={field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                    value={form[field as keyof typeof form]} // Use proper typing
-                    onChange={(e) => handleChange(field as keyof typeof form, e.target.value)}
-                />
-            ))}
-
-            <button type="submit" className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
-                Submit Application
-            </button>
-        </form>
+        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+            <div className="max-w-md w-full p-6 bg-white rounded shadow">
+                <h1 className="text-2xl font-bold mb-4">Affiliate Signup</h1>
+                <Affilaform />
+            </div>
+        </div>
     )
 }

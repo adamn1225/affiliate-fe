@@ -1,20 +1,14 @@
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <h1>Nothing here yet</h1>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <div className="flex gap-4 items-center">
-          <a
-            className="text-sm/6 text-center font-[family-name:var(--font-geist-mono)]"
-            href="https://nextnoetics.com" />
-          Next Noetics
-        </div>
+'use client'
+import Affilaform from '@/components/Affilaform'
 
-      </footer>
+
+export default function SignupPage() {
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="max-w-md w-full p-6 bg-white rounded shadow">
+        <h1 className="text-2xl text-center font-bold mb-4">HEAVY HAULERS</h1>
+        <Affilaform />
+      </div>
     </div>
-  );
+  )
 }

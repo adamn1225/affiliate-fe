@@ -38,7 +38,7 @@ export default function Affilaform() {
             const affiliateId = data.affiliate.id
 
             // Update iframe with actual deployed embed URL
-            const iframeHTML = `<iframe src="https://nextload.vercel.app/embed/form?affiliate=${affiliateId}&button_color=${encodeURIComponent(form.button_color)}&form_title=${encodeURIComponent(form.form_title || 'Request a Transport Quote')}" ...`
+            const iframeHTML = `<iframe src="https://affilaform.com/embed/form?affiliate=${affiliateId}&button_color=${encodeURIComponent(form.button_color)}&form_title=${encodeURIComponent(form.form_title || 'Request a Transport Quote')}" ...`
 
 
 

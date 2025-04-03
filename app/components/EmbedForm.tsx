@@ -27,10 +27,7 @@ export default function EmbedForm() {
         phone: '',
         year: '',
         manufacturer: '',
-        model: '',
-        utm_source: '',
-        utm_medium: '',
-        utm_campaign: ''
+        model: ''
     })
 
     const [open, setOpen] = useState(false)
@@ -105,9 +102,6 @@ export default function EmbedForm() {
                                         year: '',
                                         manufacturer: '',
                                         model: '',
-                                        utm_source: '',
-                                        utm_medium: '',
-                                        utm_campaign: ''
                                     })
                                 }}
                                 className="absolute top-2 right-2 text-gray-600 hover:text-black text-xl"

@@ -49,7 +49,7 @@ export default function Affilaform() {
                 alert("No affiliate ID returned")
                 return
             }
-            const iframeHTML = `<iframe src="https://affilaform.com/embed/form?affiliate=${affiliateId}&button_color=${encodeURIComponent(form.button_color)}&form_title=${encodeURIComponent(form.form_title || 'Request a Transport Quote')}" ...`
+            const iframeHTML = `<iframe src="https://affilaform.com/embed/form?affiliate=${affiliateId}&button_color=${encodeURIComponent(form.button_color)}&form_title=${encodeURIComponent(form.form_title || 'Request a Transport Quote')}" width="100%" height="800" style="border:none;" title="Load Request Form"></iframe>`;
             setSubmitted(true)
             setIframeCode(iframeHTML)
             setModalOpen(true)

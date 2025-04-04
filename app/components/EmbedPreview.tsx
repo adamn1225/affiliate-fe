@@ -18,7 +18,7 @@ export default function EmbedPreview({ affiliateId, buttonColor, formTitle }: Pr
             <iframe
                 src={previewUrl}
                 title="Form Preview"
-                className="w-full border rounded"
+                className="w-full border rounded p-20"
                 style={{ height: 600 }}
             />
         </div>
